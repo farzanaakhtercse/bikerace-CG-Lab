@@ -3,12 +3,6 @@ import random
 import time
 import os
 
-# ==========================================
-# GEO-MOTO MATRIX (Bike Racing Edition)
-# Developed for Computer Graphics Lab
-# Author: Md. Anisur Rahman Bhuiyan (Ayaan)
-# ==========================================
-
 # 1. Initialization and Setup
 pygame.init()
 WIDTH, HEIGHT = 600, 800
@@ -17,20 +11,20 @@ pygame.display.set_caption("Geo-Moto Matrix")
 clock = pygame.time.Clock()
 
 # Colors
-BG_COLOR = (20, 24, 30)          # Darker asphalt environment
-ROAD_COLOR = (45, 52, 54)        # Road surface
-LINE_COLOR = (223, 230, 233)     # Road lines
-PLAYER_BIKE = (16, 185, 129)     # Neon Green Player Bike
-ENEMY_BIKE = (255, 118, 117)     # Red/Pink Enemy Bike
-TEXT_COLOR = (0, 206, 201)       # Cyan UI text
-COIN_COLOR = (253, 203, 110)     # Golden Coin
-SHIELD_COLOR = (108, 92, 231)    # Purple Shield
+BG_COLOR = (20, 24, 30)          
+ROAD_COLOR = (45, 52, 54)        
+LINE_COLOR = (223, 230, 233)     
+PLAYER_BIKE = (16, 185, 129)     
+ENEMY_BIKE = (255, 118, 117)     
+TEXT_COLOR = (0, 206, 201)       
+COIN_COLOR = (253, 203, 110)     
+SHIELD_COLOR = (108, 92, 231)    
 
 # Fonts
 font_large = pygame.font.SysFont("Courier New", 42, bold=True)
 font_small = pygame.font.SysFont("Arial", 20, bold=True)
 
-# File I/O for High Score
+
 def load_high_score():
     if os.path.exists("bike_highscore.txt"):
         with open("bike_highscore.txt", "r") as file:
@@ -46,7 +40,7 @@ def save_high_score(score):
 
 high_score = load_high_score()
 
-# 2. Modular Drawing Function (Geometric Bike Construction)
+
 def draw_bike(surface, x, y, color):
     # Front Tire (Dark grey rectangle)
     pygame.draw.rect(surface, (15, 20, 25), (x + 10, y, 10, 18), border_radius=3)
@@ -63,11 +57,11 @@ def draw_bike(surface, x, y, color):
 # 3. Object Classes
 class PlayerBike:
     def __init__(self):
-        self.width = 30 # Slimmer hitbox for bike
+        self.width = 30 
         self.height = 70
         self.x = WIDTH // 2 - self.width // 2
         self.y = HEIGHT - 120
-        self.speed = 9 # Bikes are slightly faster
+        self.speed = 9 
         self.shield_active = False
         self.shield_timer = 0
 
@@ -76,28 +70,28 @@ class PlayerBike:
         if pygame.mouse.get_pressed()[0]: 
             mouse_x = pygame.mouse.get_pos()[0]
             target_x = mouse_x - (self.width // 2)
-            self.x += (target_x - self.x) * 0.20 # Faster steering response for bike
+            self.x += (target_x - self.x) * 0.20 
             
-        # Option 2: Keyboard Logic
+        
         if keys[pygame.K_LEFT]:
             self.x -= self.speed
         if keys[pygame.K_RIGHT]:
             self.x += self.speed
             
-        # Boundary Detection
+        
         if self.x < 100:
             self.x = 100
         elif self.x > WIDTH - 100 - self.width:
             self.x = WIDTH - 100 - self.width
 
-        # Check shield expiration
+       
         if self.shield_active and time.time() > self.shield_timer:
             self.shield_active = False
 
     def draw(self, surface):
         draw_bike(surface, self.x, self.y, PLAYER_BIKE)
         if self.shield_active:
-            # Forcefield effect
+        
             pygame.draw.ellipse(surface, SHIELD_COLOR, (self.x - 15, self.y - 10, 60, 90), 3)
         
     def get_rect(self):
@@ -107,7 +101,7 @@ class EnemyBike:
     def __init__(self, speed_multiplier=1.0):
         self.width = 30
         self.height = 70
-        self.x = random.choice([120, 220, 320, 420]) # Adjusted lanes for bikes
+        self.x = random.choice([120, 220, 320, 420]) 
         self.y = random.randint(-500, -100)
         self.base_speed = random.uniform(6.0, 10.0)
         self.dy = self.base_speed * speed_multiplier
@@ -145,7 +139,7 @@ class Collectible:
         pygame.draw.polygon(surface, color, [
             (self.x, self.y - 15), (self.x + 15, self.y), 
             (self.x, self.y + 15), (self.x - 15, self.y)
-        ]) # Drawn as a diamond shape for a different look
+        ]) 
         pygame.draw.circle(surface, (255, 255, 255), (self.x, int(self.y)), 4)
 
     def get_rect(self):
@@ -184,7 +178,7 @@ running = True
 while running:
     screen.fill(BG_COLOR)
     
-    # Scenery (Road Borders)
+    
     pygame.draw.rect(screen, ROAD_COLOR, (100, 0, 400, HEIGHT))
     # Draw yellow side lines
     pygame.draw.line(screen, (253, 203, 110), (100, 0), (100, HEIGHT), 5)
@@ -216,7 +210,7 @@ while running:
         
     elif game_state == "PLAYING":
         elapsed_actual = time.time() - start_time
-        speed_multiplier = 1.0 + (elapsed_actual * 0.025) # Bikes accelerate slightly faster
+        speed_multiplier = 1.0 + (elapsed_actual * 0.025) 
         
         # Draw moving dashed road lines
         line_offset = (line_offset + 7 * speed_multiplier) % 40
@@ -248,7 +242,7 @@ while running:
             if player.get_rect().colliderect(enemy.get_rect()):
                 if player.shield_active:
                     enemy.y = random.randint(-500, -100)
-                    for _ in range(10): # Small spark particles on shield impact
+                    for _ in range(10): 
                         particles.append(Particle(enemy.x + 15, enemy.y + 35))
                 else:
                     game_state = "GAMEOVER"
