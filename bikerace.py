@@ -66,7 +66,6 @@ class PlayerBike:
         self.shield_timer = 0
 
     def move(self, keys):
-        # Option 1: Mouse Swipe Logic
         if pygame.mouse.get_pressed()[0]: 
             mouse_x = pygame.mouse.get_pos()[0]
             target_x = mouse_x - (self.width // 2)
